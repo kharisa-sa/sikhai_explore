@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sikhai Explore</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Belgrano&family=Benne&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:#fff;overflow-x:hidden;}
+
+/* ===== NAVBAR ===== */
+nav{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  background:#fff;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.07);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.nav-logo svg{width:44px;height:44px;}
+.nav-logo span{font-family:'Belgrano',serif;font-size:20px;color:#103172;letter-spacing:0.5px;}
+.nav-links{display:flex;gap:36px;align-items:center;}
+.nav-links a{
+  font-family:'Belgrano',serif;font-size:16px;color:#103172;
+  text-decoration:none;cursor:pointer;transition:opacity .2s;position:relative;
+}
+.nav-links a:hover{opacity:0.6;}
+.nav-links a.active::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;height:2px;background:#103172;border-radius:2px;
+}
+
+/* ===== PAGE SYSTEM ===== */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ==== HOME ==== */
+.hero{
+  position:relative;width:100%;height:100vh;min-height:620px;
+  overflow:hidden;margin-top:72px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:url('Candi Borobudur 2.jpg') center/cover no-repeat;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(9,24,72,0.68) 0%,rgba(120,140,200,0.60) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  padding:0 72px;height:100%;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.hero-sub{
+  font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,40px);
+  font-weight:500;color:#fff;max-width:680px;margin-bottom:14px;line-height:1.3;
+}
+.hero-h1{
+  font-family:'Playfair Display',serif;font-size:clamp(40px,6vw,96px);
+  font-weight:700;color:#fff;max-width:700px;line-height:1.1;margin-bottom:40px;
+}
+.btn-jelajahi{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:rgba(67,135,194,0.85);color:#fff;
+  font-family:'Benne',serif;font-size:clamp(18px,2vw,32px);
+  padding:16px 48px;border-radius:40px;border:none;cursor:pointer;
+  text-decoration:none;transition:background .2s,transform .15s;
+  width:fit-content;
+}
+.btn-jelajahi:hover{background:rgba(67,135,194,1);transform:translateY(-2px);}
+.stats-bar{
+  background:rgba(16,49,114,0.84);
+  padding:16px 72px;
+  display:flex;gap:56px;align-items:center;flex-wrap:wrap;
+}
+.stats-bar span{
+  font-family:'Playfair Display',serif;font-size:clamp(14px,1.8vw,28px);
+  font-weight:700;color:#fff;
+}
+.section-grad{
+  background:linear-gradient(180deg,#C9EEFF 0%,rgba(213,230,239,0.38) 100%);
+  border-radius:30px;margin:24px;padding:56px 72px;
+}
+.s-label{
+  font-family:'Playfair Display',serif;font-size:20px;
+  font-weight:700;color:#103172;margin-bottom:8px;
+}
+.s-title{
+  font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,40px);
+  font-weight:500;color:#000;margin-bottom:36px;
+}
+.s-title span{color:#103172;}
+.cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.dest-card{
+  position:relative;border-radius:30px;overflow:hidden;
+  height:380px;cursor:pointer;
+  border:3px solid #103172;
+  box-shadow:0 4px 4px rgba(0,0,0,0.25);
+  transition:transform .2s,box-shadow .2s;
+}
+.dest-card:hover{transform:translateY(-7px);box-shadow:0 14px 35px rgba(16,49,114,0.28);}
+.dest-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.dest-card:hover img{transform:scale(1.04);}
+.dest-card-over{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg,rgba(0,0,0,0.78) 0%,transparent 70%);
+  padding:28px 22px 18px;
+}
+.badge{
+  display:inline-block;background:rgba(130,121,121,0.84);
+  color:#fff;font-family:'Inter',sans-serif;font-size:11px;
+  padding:3px 12px;border-radius:30px;margin-bottom:6px;
+}
+.dest-card h3{font-family:'Belgrano',serif;font-size:22px;color:#fff;margin-bottom:5px;}
+.dest-card p{font-family:'Inter',sans-serif;font-size:11px;color:#fff;line-height:1.5;margin-bottom:12px;}
+.btn-sm{
+  display:inline-block;background:#103172;color:#fff;
+  font-family:'Benne',serif;font-size:13px;
+  padding:7px 20px;border-radius:30px;border:none;cursor:pointer;
+  transition:background .2s;
+}
+.btn-sm:hover{background:#1a4ba8;}
+.section-paket{padding:56px 72px;}
+.p-label{font-family:'Playfair Display',serif;font-size:18px;color:#103172;margin-bottom:6px;}
+.p-title{font-family:'Playfair Display',serif;font-size:clamp(22px,3vw,36px);font-weight:700;margin-bottom:36px;}
+.p-title span{color:#103172;}
+.paket-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:28px;}
+.paket-card{
+  background:#CCDBE2;border-radius:30px;padding:30px 26px 22px;
+  display:flex;flex-direction:column;gap:10px;
+  transition:transform .2s,box-shadow .2s;
+}
+.paket-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(16,49,114,0.15);}
+.paket-card h3{font-family:'Playfair Display',serif;font-size:24px;font-weight:500;}
+.paket-card ul{list-style:none;font-family:'Playfair Display',serif;font-size:15px;line-height:1.9;}
+.paket-card .price{font-family:'Playfair Display',serif;font-size:18px;margin-top:4px;}
+.paket-card .price b{color:#1B366B;font-weight:500;}
+.btn-pesan{
+  background:#103172;color:#D9D9D9;
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:500;
+  padding:12px 28px;border-radius:30px;border:none;cursor:pointer;
+  width:fit-content;margin-top:4px;transition:background .2s;
+}
+.btn-pesan:hover{background:#1a4ba8;}
+.btn-lainnya{
+  display:block;margin:0 auto;background:#CBDBE2;color:#000;
+  font-family:'Belgrano',serif;font-size:20px;
+  padding:16px 52px;border-radius:30px;border:none;cursor:pointer;
+  transition:background .2s;
+}
+.btn-lainnya:hover{background:#b5cbd6;}
+.section-tentang{
+  background:linear-gradient(180deg,#C9EEFF 0%,rgba(213,230,239,0.38) 100%);
+  border-radius:30px;margin:24px;padding:56px 72px;
+}
+.tentang-box{background:#fff;border-radius:30px;padding:52px;}
+.tentang-box h2{font-family:'Playfair Display',serif;font-size:clamp(22px,2.5vw,40px);font-weight:500;margin-bottom:28px;}
+.tentang-box p{font-family:'Playfair Display',serif;font-size:clamp(14px,1.5vw,28px);font-weight:500;line-height:1.7;margin-bottom:24px;}
+.tentang-box h3{font-family:'Playfair Display',serif;font-size:clamp(18px,2vw,32px);font-weight:500;margin-bottom:18px;}
+.keunggulan{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.keunggulan p{font-family:'Playfair Display',serif;font-size:clamp(14px,1.5vw,28px);font-weight:500;}
+footer{
+  background:rgba(16,49,114,0.84);color:#fff;
+  padding:28px 48px;border-radius:30px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap;
+}
+.f-brand{display:flex;align-items:center;gap:12px;}
+.f-brand svg{width:46px;height:46px;}
+.f-brand span{font-family:'Belgrano',serif;font-size:18px;}
+.f-contact{font-family:'Belgrano',serif;font-size:14px;line-height:1.9;}
+.f-div{width:1px;height:88px;background:#fff;opacity:.7;}
+.f-links h4{font-family:'Belgrano',serif;font-size:14px;margin-bottom:8px;}
+.f-links ul{list-style:none;}
+.f-links li{font-family:'Belgrano',serif;font-size:12px;line-height:1.9;}
+.f-copy{margin-left:auto;font-family:'Belgrano',serif;font-size:13px;}
+.dest-hero{position:relative;height:55vh;min-height:360px;margin-top:72px;overflow:hidden;}
+.dest-hero img{width:100%;height:100%;object-fit:cover;}
+.dest-hero-overlay{
+  position:absolute;inset:0;background:rgba(16,49,114,0.48);
+  display:flex;align-items:center;justify-content:center;
+}
+.dest-hero-overlay h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,64px);font-weight:700;color:#fff;text-align:center;padding:0 24px;}
+.dest-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;padding:40px 72px 60px;}
+.dest-big-card{
+  position:relative;border-radius:35px;overflow:hidden;
+  height:300px;cursor:pointer;
+  transition:transform .2s,box-shadow .2s;
+}
+.dest-big-card:hover{transform:translateY(-6px);box-shadow:0 14px 35px rgba(0,0,0,0.22);}
+.dest-big-card img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.dest-big-card:hover img{transform:scale(1.04);}
+.dest-big-card .card-info{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(0deg,rgba(0,0,0,0.7) 0%,transparent 60%);
+  padding:22px 26px 18px;
+}
+.dest-big-card .rat{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.dest-big-card .rat .star-ico{color:#DEB11F;font-size:20px;line-height:1;}
+.dest-big-card .rat span{color:#fff;font-family:'Inter',sans-serif;font-size:20px;font-weight:700;}
+.dest-big-card h3{color:#fff;font-family:'Inter',sans-serif;font-size:24px;font-weight:700;}
+.detail-wrap{margin-top:72px;}
+.detail-hero{position:relative;margin:18px 72px;border-radius:30px;overflow:hidden;height:500px;}
+.detail-hero img{width:100%;height:100%;object-fit:cover;}
+.detail-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.62) 0%,transparent 55%);}
+.detail-hero-info{position:absolute;bottom:30px;left:40px;right:40px;z-index:2;display:flex;justify-content:space-between;align-items:flex-end;}
+.detail-hero-info .dh-left h1{font-family:'Belgrano',serif;font-size:clamp(26px,3.5vw,52px);color:#fff;margin-bottom:8px;}
+.detail-hero-info .dh-left .loc{display:flex;align-items:center;gap:8px;font-family:'Belgrano',serif;font-size:18px;color:#D9D9D9;}
+.detail-hero-info .dh-right{text-align:right;}
+.detail-hero-info .dh-right .big-rating{font-family:'Belgrano',serif;font-size:clamp(28px,3.5vw,52px);color:#DEB11F;}
+.detail-hero-info .dh-right .stars-row{color:#DEB11F;font-size:22px;letter-spacing:2px;}
+.detail-desc{padding:36px 72px;font-family:'Belgrano',serif;font-size:clamp(14px,1.5vw,28px);color:#000;line-height:1.75;white-space:pre-line;}
+.detail-gallery{padding:16px 72px 36px;}
+.gal-title{font-family:'Belgrano',serif;font-size:34px;margin-bottom:20px;}
+.gal-title span{color:#103172;}
+.gal-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:18px;
+  background:linear-gradient(180deg,rgba(255,255,255,0.61) 0%,rgba(200,237,255,0.61) 100%);
+  border-radius:30px;padding:26px;
+}
+.gal-grid img{width:100%;height:220px;object-fit:cover;border-radius:30px;}
+.detail-paket-sec{padding:22px 72px 56px;}
+.detail-paket-sec h2{font-family:'Belgrano',serif;font-size:28px;margin-bottom:16px;}
+.btn-lihat{background:#103172;color:#fff;font-family:'Belgrano',serif;font-size:22px;padding:14px 44px;border-radius:30px;border:none;cursor:pointer;transition:background .2s;}
+.btn-lihat:hover{background:#1a4ba8;}
+.pw-hero{position:relative;height:56vh;min-height:400px;margin-top:72px;overflow:hidden;}
+.pw-hero img{width:100%;height:100%;object-fit:cover;}
+.pw-hero-over{position:absolute;inset:0;background:rgba(123,168,214,0.44);display:flex;flex-direction:column;justify-content:flex-end;padding:44px 72px;}
+.pw-hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5.5vw,100px);font-weight:700;color:#fff;line-height:1.1;}
+.pw-hero h1 span{color:#103172;}
+.pw-hero p{font-family:'Playfair Display',serif;font-size:clamp(13px,1.8vw,26px);font-weight:700;color:#fff;max-width:800px;margin-top:10px;}
+.pw-section{padding:48px 72px;}
+.pw-sublabel{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#103172;margin-bottom:6px;}
+.pw-big-title{font-family:'Playfair Display',serif;font-size:clamp(24px,4vw,64px);font-weight:700;margin-bottom:16px;}
+.pw-section-sub{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;margin-bottom:26px;}
+.pw-wrap{background:linear-gradient(180deg,#C9EEFF 0%,rgba(213,230,239,0.38) 100%);border-radius:30px;padding:36px 32px;}
+.pw-row-label{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;margin:20px 0 16px;}
+.pw-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:8px;}
+.pw-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:780px;}
+.pw-item{background:#CCDBE2;border-radius:30px;padding:26px 22px;transition:transform .2s,box-shadow .2s;}
+.pw-item:hover{transform:translateY(-5px);box-shadow:0 10px 26px rgba(16,49,114,0.15);}
+.pw-item h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;margin-bottom:12px;}
+.pw-item ul{list-style:none;font-family:'Playfair Display',serif;font-size:13px;line-height:1.9;margin-bottom:12px;}
+.pw-item .pw-price{font-family:'Playfair Display',serif;font-size:18px;margin-bottom:10px;}
+.pw-item .pw-price b{color:#103172;font-weight:500;}
+.cta-box{background:rgba(16,49,114,0.84);border-radius:30px;padding:36px 52px;margin-top:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+.cta-box .cta-left h3{font-family:'Playfair Display',serif;font-size:clamp(20px,2.5vw,36px);font-weight:500;color:#fff;}
+.cta-box .cta-left h3 span{color:#C9EEFF;}
+.cta-box .cta-left p{font-family:'Playfair Display',serif;font-size:clamp(12px,1.5vw,24px);font-weight:500;color:#fff;max-width:700px;margin-top:8px;}
+.btn-wa{background:#C9EEFF;color:#103172;font-family:'Playfair Display',serif;font-size:clamp(12px,1.3vw,20px);font-weight:500;padding:14px 30px;border-radius:30px;border:none;cursor:pointer;text-align:center;min-width:210px;line-height:1.6;transition:background .2s;}
+.btn-wa:hover{background:#aaddf8;}
+.bk-page{margin-top:72px;padding:60px 72px;}
+.bk-page h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,52px);font-weight:700;color:#103172;margin-bottom:32px;}
+.bk-form{background:linear-gradient(180deg,#C9EEFF 0%,rgba(213,230,239,0.38) 100%);border-radius:30px;padding:52px;max-width:760px;}
+.fg{margin-bottom:22px;}
+.fg label{display:block;font-family:'Playfair Display',serif;font-size:17px;font-weight:500;color:#103172;margin-bottom:7px;}
+.fg input,.fg select,.fg textarea{width:100%;padding:13px 20px;border:2px solid #103172;border-radius:14px;font-family:'Playfair Display',serif;font-size:15px;background:#fff;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#1a4ba8;}
+.fg textarea{height:110px;resize:vertical;}
+.btn-bk-wa{background:#25D366;color:#fff;font-family:'Belgrano',serif;font-size:18px;padding:16px 48px;border-radius:30px;border:none;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .2s;}
+.btn-bk-wa:hover{background:#1ebe5b;}
+.bk-success{display:none;background:#C9EEFF;border-radius:20px;padding:26px;margin-top:20px;font-family:'Playfair Display',serif;font-size:18px;color:#103172;line-height:1.6;}
+
+/* Responsive */
+@media screen and (max-width:960px){
+  .cards-3,.paket-cards,.pw-grid-3{grid-template-columns:1fr 1fr;}
+  .dest-grid{grid-template-columns:1fr;padding:0 24px 60px;}
+  nav{padding:0 20px;}
+  .nav-links{gap:14px;}
+  .nav-links a{font-size:13px;}
+  .hero-content,.stats-bar,.section-grad,.section-paket,.section-tentang{padding:36px 24px;}
+  .section-grad,.section-tentang{margin:12px;}
+  footer{padding:24px;}
+  .pw-section,.bk-page{padding:36px 24px;}
+  .detail-hero{margin:12px 24px;}
+  .detail-desc,.detail-gallery,.detail-paket-sec{padding-left:24px;padding-right:24px;}
+  .dest-hero-overlay h1{font-size:28px;}
+}
+
+@media screen and (max-width: 600px) {
+    img[src*="ai-removebg-preview.jpg"] {
+        height: 60px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+        display: block !important;
+        margin: 0 auto 10px auto !important;
+    }
+
+    html, body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    nav, .navbar, #main-nav {
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 15px !important;
+        width: 100% !important;
+    }
+
+    .nav-links, ul {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px !important;
+        margin-top: 10px !important;
+        padding: 0 !important;
+        list-style: none !important;
+    }
+
+    .nav-links a, nav a {
+        font-size: 13px !important;
+        padding: 5px 8px !important;
+    }
+
+  img {
+    object-fit: cover !important;
+  }
+
+  .card, .kartu, .box, .gallery img, .galeri-foto img {
+    width: 100% !important;
+    max-width: 340px !important;
+    height: auto !important;
+  }
+    }
+
+</style>
+<!-- ============================================================
+     AKHIR CSS
+     ============================================================ -->
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="main-nav">
+  <div class="nav-logo" onclick="showPage('home')">
+    <img src="ai-removebg-preview.jpg" style="width:44px;height:44px;">
+      <circle cx="22" cy="22" r="22" fill="#103172"/>
+      <path d="M8 24.5L20 21L24 32L27 29L24 20L36 16L34 13L12 18L9 16L7 19L10 21L8 24.5Z" fill="white"/>
+      <path d="M17 27L19 30L22 28L20 24L17 27Z" fill="#C9EEFF"/>
+    </svg>
+    <span>SIKHAI EXPLORE</span>
+  </div>
+  <div class="nav-links">
+    <a id="nav-home" onclick="showPage('home')" class="active">BERANDA</a>
+    <a id="nav-destinasi" onclick="showPage('destinasi')">DESTINASI</a>
+    <a id="nav-paket" onclick="showPage('paket')">PAKET WISATA</a>
+    <a id="nav-booking" onclick="showPage('booking')">BOOKING</a>
+  </div>
+</nav>
+
+<!-- ==================== HALAMAN: BERANDA ==================== -->
+<div id="page-home" class="page active">
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-sub">Temukan destinasi terbaik di Indonesia</div>
+      <h1 class="hero-h1">YOUR JOURNEY<br>STARTS HERE</h1>
+      <button class="btn-jelajahi" onclick="showPage('destinasi')">Jelajahi Sekarang</button>
+    </div>
+  </section>
+
+  <div class="stats-bar">
+    <span>👥 1000+ Wisatawan</span>
+    <span>🤝 20+ Mitra</span>
+    <span>🇮🇩 Seluruh Indonesia</span>
+  </div>
+
+  <!-- ── DESTINASI UNGGULAN ── -->
+  <section class="section-grad">
+    <div class="s-label">DESTINASI UNGGULAN</div>
+    <div class="s-title">Temukan destinasi <span>favorit</span> wisatawan Indonesia</div>
+    <div class="cards-3">
+
+      <!-- CARD 1 BERANDA -->
+      <div class="dest-card" onclick="showDetail('raja-ampat')">
+        <img src="Rectangle 28.jpg" alt="Raja Ampat">
+        <div class="dest-card-over">
+          <div class="badge">Papua Barat</div>
+          <h3>RAJA AMPAT</h3>
+          <p>Kepulauan eksotis dengan laut jernih dan keindahan bawah laut yang terkenal di dunia</p>
+          <button class="btn-sm">Jelajahi</button>
+        </div>
+      </div>
+
+      <!-- CARD 2 BERANDA -->
+      <div class="dest-card" onclick="showDetail('gunung-bromo')">
+        <img src="Rectangle 9.jpg" alt="Gunung Bromo">
+        <div class="dest-card-over">
+          <div class="badge">Jawa Timur</div>
+          <h3>GUNUNG BROMO</h3>
+          <p>Nikmati sunrise indah dengan lautan pasir dan kawah aktif yang menjadi ikon Indonesia</p>
+          <button class="btn-sm">Jelajahi</button>
+        </div>
+      </div>
+
+      <!-- CARD 3 BERANDA -->
+      <div class="dest-card" onclick="showDetail('candi-borobudur')">
+        <img src="Rectangle 38.jpg" alt="Candi Borobudur">
+        <div class="dest-card-over">
+          <div class="badge">Jawa Tengah</div>
+          <h3>CANDI BOROBUDUR</h3>
+          <p>Candi Buddha terbesar dengan arsitektur megah dan relief bersejarah.</p>
+          <button class="btn-sm">Jelajahi</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── PAKET WISATA ── -->
+  <section class="section-paket">
+    <div class="p-label">---PAKET TERSEDIA</div>
+    <div class="p-title">Pilih Paket <span>Terbaik</span><br>untuk Kamu</div>
+    <div class="paket-cards">
+      <div class="paket-card">
+        <h3>Bromo Tour</h3>
+        <ul>
+          <li>✔️ Jeep Tour + Tiket Masuk</li>
+          <li>✔️ Tour Guide Berpengalaman</li>
+          <li>✔️ Snack &amp; Air Mineral</li>
+          <li>✔️ 4–8 Orang · 1 Hari</li>
+        </ul>
+        <div class="price"><b>Rp750.000</b> / <small>orang</small></div>
+        <button class="btn-pesan" onclick="bookPaket('Bromo Tour – Rp750.000/orang')">Pesan Sekarang</button>
+      </div>
+      <div class="paket-card">
+        <h3>Raja Ampat Tour</h3>
+        <ul>
+          <li>✔️ Fast Boat + Homestay</li>
+          <li>✔️ Island Tour + Snorkeling</li>
+          <li>✔️ Dokumentasi Foto</li>
+          <li>✔️ 4–8 Orang · 3 Hari 2 Malam</li>
+        </ul>
+        <div class="price"><b>Rp2.150.000</b> / <small>orang</small></div>
+        <button class="btn-pesan" onclick="bookPaket('Raja Ampat Tour – Rp2.150.000/orang')">Pesan Sekarang</button>
+      </div>
+      <div class="paket-card">
+        <h3>Borobudur Tour</h3>
+        <ul>
+          <li>✔️ Tiket Masuk Borobudur</li>
+          <li>✔️ Sunrise / Regular Visit</li>
+          <li>✔️ Tour Guide Berlisensi</li>
+          <li>✔️ Dokumentasi Foto</li>
+          <li>✔️ 4–8 Orang · 1 Hari</li>
+        </ul>
+        <div class="price"><b>Rp650.000</b> / <small>orang</small></div>
+        <button class="btn-pesan" onclick="bookPaket('Borobudur Tour – Rp650.000/orang')">Pesan Sekarang</button>
+      </div>
+    </div>
+    <button class="btn-lainnya" onclick="showPage('paket')">LAINNYA</button>
+  </section>
+
+  <!-- ── TENTANG KAMI ── -->
+  <section class="section-tentang">
+    <div class="tentang-box">
+      <h2>❗TENTANG KAMI</h2>
+      <p>Sikhai Explore adalah platform wisata yang membantu wisatawan menemukan destinasi menarik dan terbaik di Indonesia. Kami menyediakan informasi destinasi, rekomendasi paket wisata, dan layanan pemesanan yang mudah digunakan sehingga perjalanan menjadi lebih nyaman dan menyenangkan.</p>
+      <p>Kami percaya bahwa setiap perjalanan bukan hanya tentang mengunjungi tempat baru, tetapi juga tentang menciptakan pengalaman yang berkesan, memperluas wawasan, dan mengenal kekayaan Indonesia lebih dekat. Oleh karena itu, kami berkomitmen untuk menghadirkan informasi wisata yang mudah dipahami, menarik, dan bermanfaat bagi seluruh pengguna.</p>
+      <h3>MENGAPA MEMILIH KAMI?</h3>
+      <div class="keunggulan">
+        <p>✅ Destinasi wisata pilihan</p>
+        <p>✅ Informasi lengkap dan mudah dipahami</p>
+        <p>✅ Paket wisata terjangkau</p>
+        <p>✅ Proses pemesanan yang sederhana</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="f-brand">
+      <img src="ai-removebg-preview.jpg" style="width:44px;height:44px;">
+      <span>SIKHAI EXPLORE</span>
+    </div>
+    <div class="f-contact">
+      <div>Kontak kami : +62 812-8653-3826</div>
+      <div>Info : @Sikhai.com</div>
+    </div>
+    <div class="f-div"></div>
+    <div class="f-links">
+      <h4>Top Destinasi</h4>
+      <ul><li>Raja Ampat</li><li>Gunung Bromo</li><li>Candi Borobudur</li></ul>
+    </div>
+    <div class="f-copy">© 2026 Sikhai</div>
+  </footer>
+</div>
+<!-- ==================== AKHIR BERANDA ==================== -->
+
+
+<!-- ==================== HALAMAN: DESTINASI ==================== -->
+<div id="page-destinasi" class="page">
+
+  <div class="dest-hero">
+    <img src="Rectangle 151.jpg" alt="Destinasi">
+    <div class="dest-hero-overlay">
+      <h1>Jelajahi Lebih Banyak Tempat</h1>
+    </div>
+  </div>
+
+  <div class="dest-grid">
+
+    <!-- GRID CARD 1: Kawah Ijen -->
+    <div class="dest-big-card" onclick="showDetail('kawah-ijen')">
+      <img src="Rectangle 30.jpg" alt="Kawah Ijen">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,8</span></div>
+        <h3>Kawah Ijen</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 2: Gunung Bromo -->
+    <div class="dest-big-card" onclick="showDetail('gunung-bromo')">
+      <img src="Rectangle 32.jpg" alt="Gunung Bromo">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,9</span></div>
+        <h3>Gunung Bromo</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 3: Raja Ampat -->
+    <div class="dest-big-card" onclick="showDetail('raja-ampat')">
+      <img src="Rectangle 31.jpg" alt="Raja Ampat">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>5,0</span></div>
+        <h3>Raja Ampat</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 4: Kelingking Beach -->
+    <div class="dest-big-card" onclick="showDetail('kelingking-beach')">
+      <img src="Rectangle 33.jpg" alt="Kelingking Beach">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,8</span></div>
+        <h3>Kelingking Beach</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 5: Candi Borobudur -->
+    <div class="dest-big-card" onclick="showDetail('candi-borobudur')">
+      <img src="Rectangle 38.jpg" alt="Candi Borobudur">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,7</span></div>
+        <h3>Candi Borobudur</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 6: Candi Prambanan -->
+    <div class="dest-big-card" onclick="showDetail('candi-prambanan')">
+      <img src="Rectangle 36.jpg" alt="Candi Prambanan">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,8</span></div>
+        <h3>Candi Prambanan</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 7: Pura Uluwatu -->
+    <div class="dest-big-card" onclick="showDetail('pura-uluwatu')">
+      <img src="Rectangle 39.jpg" alt="Pura Uluwatu">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,6</span></div>
+        <h3>Pura Uluwatu</h3>
+      </div>
+    </div>
+
+    <!-- GRID CARD 8: Ubud Bali -->
+    <div class="dest-big-card" onclick="showDetail('ubud')">
+      <img src="Rectangle 37.jpg" alt="Ubud Bali">
+      <div class="card-info">
+        <div class="rat"><span class="star-ico">★</span><span>4,9</span></div>
+        <h3>Ubud Bali</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <div class="f-brand">
+      <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white"/><path d="M8 24.5L20 21L24 32L27 29L24 20L36 16L34 13L12 18L9 16L7 19L10 21L8 24.5Z" fill="#103172"/><path d="M17 27L19 30L22 28L20 24L17 27Z" fill="#C9EEFF"/></svg>
+      <span>SIKHAI EXPLORE</span>
+    </div>
+    <div class="f-contact"><div>Kontak kami : +62 812-8653-3826</div><div>Info : @Sikhai.com</div></div>
+    <div class="f-div"></div>
+    <div class="f-links"><h4>Top Destinasi</h4><ul><li>Raja Ampat</li><li>Gunung Bromo</li><li>Candi Borobudur</li></ul></div>
+    <div class="f-copy">© 2026 Sikhai</div>
+  </footer>
+</div>
+<!-- ==================== AKHIR DESTINASI ==================== -->
+
+
+<div id="page-detail" class="page">
+  <div class="detail-wrap">
+    <div class="detail-hero">
+      <img id="d-img" src="" alt="">
+      <div class="detail-hero-info">
+        <div class="dh-left">
+          <h1 id="d-name"></h1>
+          <div class="loc">📍 <span id="d-loc"></span></div>
+        </div>
+        <div class="dh-right">
+          <div class="big-rating" id="d-rating"></div>
+          <div class="stars-row" id="d-stars"></div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-desc" id="d-desc"></div>
+    <div class="detail-gallery">
+      <div class="gal-title">GALERI <span>FOTO</span></div>
+      <div class="gal-grid" id="d-gallery"></div>
+    </div>
+    <div class="detail-paket-sec">
+      <h2>PAKET WISATA</h2>
+      <button class="btn-lihat" onclick="showPage('paket')">Lihat</button>
+    </div>
+  </div>
+  <footer>
+    <div class="f-brand">
+      <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white"/><path d="M8 24.5L20 21L24 32L27 29L24 20L36 16L34 13L12 18L9 16L7 19L10 21L8 24.5Z" fill="#103172"/><path d="M17 27L19 30L22 28L20 24L17 27Z" fill="#C9EEFF"/></svg>
+      <span>SIKHAI EXPLORE</span>
+    </div>
+    <div class="f-contact"><div>Kontak kami : +62 812-8653-3826</div><div>Info : @Sikhai.com</div></div>
+    <div class="f-copy">© 2026 Sikhai</div>
+  </footer>
+</div>
+<!-- ==================== AKHIR DETAIL ==================== -->
+
+
+<!-- ==================== HALAMAN: PAKET WISATA ==================== -->
+<div id="page-paket" class="page">
+
+  <div class="pw-hero">
+    <img src="Rectangle 151.jpg" alt="Paket Wisata">
+    <div class="pw-hero-over">
+      <h1>Pilih <span>Paket</span> Wisatamu</h1>
+      <p>Setiap destinasi tersedia memiliki harga yang berbeda. Sesuaikan dengan kebutuhan dan budgetmu.</p>
+    </div>
+  </div>
+
+  <section class="pw-section">
+    <div class="pw-sublabel">--8 Destinasi Tersedia</div>
+    <div class="pw-big-title">Semua Paket Wisata</div>
+    <div class="pw-section-sub">Jelajahi keindahan Indonesia</div>
+    <div class="pw-wrap">
+      <div class="pw-grid-3">
+        <div class="pw-item">
+          <h3>Bromo Tour</h3>
+          <ul><li>✔️ Jeep Tour + Tiket Masuk</li><li>✔️ Tour Guide Berpengalaman</li><li>✔️ Snack &amp; Air Mineral</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp750.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Bromo Tour – Rp750.000/orang')">Pesan Sekarang</button>
+        </div>
+        <div class="pw-item">
+          <h3>Ubud Tour</h3>
+          <ul><li>✔️ Monkey Forest &amp; Ubud Palace</li><li>✔️ Sawah Terasering Tegalalang</li><li>✔️ Tour Guide Berpengalaman</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp850.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Ubud Tour – Rp850.000/orang')">Pesan Sekarang</button>
+        </div>
+        <div class="pw-item">
+          <h3>Raja Ampat Tour</h3>
+          <ul><li>✔️ Fast Boat + Homestay</li><li>✔️ Island Tour + Snorkeling</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 3 Hari 2 Malam</li></ul>
+          <div class="pw-price"><b>Rp2.150.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Raja Ampat Tour – Rp2.150.000/orang')">Pesan Sekarang</button>
+        </div>
+      </div>
+      <div class="pw-row-label">Rencanakan perjalananmu dengan mudah.</div>
+      <div class="pw-grid-3">
+        <div class="pw-item">
+          <h3>Borobudur Tour</h3>
+          <ul><li>✔️ Tiket Masuk Borobudur</li><li>✔️ Sunrise / Regular Visit</li><li>✔️ Tour Guide Berlisensi</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp650.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Borobudur Tour – Rp650.000/orang')">Pesan Sekarang</button>
+        </div>
+        <div class="pw-item">
+          <h3>Prambanan Tour</h3>
+          <ul><li>✔️ Tiket Masuk Prambanan</li><li>✔️ Jelajah Kompleks Candi</li><li>✔️ Tour Guide Berpengalaman</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp600.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Prambanan Tour – Rp600.000/orang')">Pesan Sekarang</button>
+        </div>
+        <div class="pw-item">
+          <h3>Uluwatu Tour</h3>
+          <ul><li>✔️ Tiket Masuk Pura Uluwatu</li><li>✔️ Sunset View Point</li><li>✔️ Pertunjukan Tari Kecak</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp950.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Uluwatu Tour – Rp950.000/orang')">Pesan Sekarang</button>
+        </div>
+      </div>
+      <div class="pw-row-label">Temukan Petualanganmu</div>
+      <div class="pw-grid-2">
+        <div class="pw-item">
+          <h3>Ijen Tour</h3>
+          <ul><li>✔️ Trekking Blue Fire</li><li>✔️ Tiket Masuk Wisata</li><li>✔️ Local Guide Berpengalaman</li><li>✔️ Snack &amp; Air Mineral</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp750.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Ijen Tour – Rp750.000/orang')">Pesan Sekarang</button>
+        </div>
+        <div class="pw-item">
+          <h3>Kelingking Trip</h3>
+          <ul><li>✔️ Kelingking Beach</li><li>✔️ Angel's Billabong</li><li>✔️ Broken Beach Tour</li><li>✔️ Fast Boat PP</li><li>✔️ Dokumentasi Foto</li><li>✔️ 4–8 Orang · 1 Hari</li></ul>
+          <div class="pw-price"><b>Rp1.250.000</b> / orang</div>
+          <button class="btn-pesan" onclick="bookPaket('Kelingking Trip – Rp1.250.000/orang')">Pesan Sekarang</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <div class="cta-left">
+        <h3>Bingung Pilih <span>Paket?</span></h3>
+        <p>Hubungi tim kami dan kami akan bantu merekomendasikan paket wisata terbaik sesuai budget dan kebutuhanmu.</p>
+      </div>
+      <button class="btn-wa" onclick="openWA('Halo, saya ingin konsultasi paket wisata Sikhai Explore')">
+        💬 Hubungi kami via WhatsApp<br><strong>+62 812-8653-3826</strong>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="f-brand">
+      <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white"/><path d="M8 24.5L20 21L24 32L27 29L24 20L36 16L34 13L12 18L9 16L7 19L10 21L8 24.5Z" fill="#103172"/><path d="M17 27L19 30L22 28L20 24L17 27Z" fill="#C9EEFF"/></svg>
+      <span>SIKHAI EXPLORE</span>
+    </div>
+    <div class="f-contact"><div>Kontak kami : +62 812-8653-3826</div><div>Info : @Sikhai.com</div></div>
+    <div class="f-div"></div>
+    <div class="f-links"><h4>Top Destinasi</h4><ul><li>Raja Ampat</li><li>Gunung Bromo</li><li>Candi Borobudur</li></ul></div>
+    <div class="f-copy">© 2026 Sikhai</div>
+  </footer>
+</div>
+
+
+<div id="page-booking" class="page">
+  <div class="bk-page">
+    <h1>BOOKING</h1>
+    <div class="bk-form">
+      <div class="fg">
+        <label>Nama Lengkap</label>
+        <input type="text" id="bk-name" placeholder="Masukkan nama lengkap">
+      </div>
+      <div class="fg">
+        <label>Nomor WhatsApp</label>
+        <input type="text" id="bk-wa" placeholder="Contoh: 0812xxxxxxx">
+      </div>
+      <div class="fg">
+        <label>Pilih Paket Wisata</label>
+        <select id="bk-paket">
+          <option value="">-- Pilih Paket --</option>
+          <option>Bromo Tour – Rp750.000/orang</option>
+          <option>Ubud Tour – Rp850.000/orang</option>
+          <option>Raja Ampat Tour – Rp2.150.000/orang</option>
+          <option>Borobudur Tour – Rp650.000/orang</option>
+          <option>Prambanan Tour – Rp600.000/orang</option>
+          <option>Uluwatu Tour – Rp950.000/orang</option>
+          <option>Ijen Tour – Rp750.000/orang</option>
+          <option>Kelingking Trip – Rp1.250.000/orang</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Tanggal Keberangkatan</label>
+        <input type="date" id="bk-date">
+      </div>
+      <div class="fg">
+        <label>Jumlah Peserta</label>
+        <input type="number" id="bk-pax" placeholder="4 – 8 orang" min="1" max="20">
+      </div>
+      <div class="fg">
+        <label>Catatan Tambahan</label>
+        <textarea id="bk-note" placeholder="Tulis permintaan khusus (opsional)"></textarea>
+      </div>
+      <button class="btn-bk-wa" onclick="sendBookingWA()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Pesan via WhatsApp
+      </button>
+      <div class="bk-success" id="bk-success">
+        🎉 Pesanan kamu sudah terkirim! Tim Sikhai Explore akan segera menghubungi kamu melalui WhatsApp.
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="f-brand">
+      <svg viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="white"/><path d="M8 24.5L20 21L24 32L27 29L24 20L36 16L34 13L12 18L9 16L7 19L10 21L8 24.5Z" fill="#103172"/><path d="M17 27L19 30L22 28L20 24L17 27Z" fill="#C9EEFF"/></svg>
+      <span>SIKHAI EXPLORE</span>
+    </div>
+    <div class="f-contact"><div>Kontak kami : +62 812-8653-3826</div><div>Info : @Sikhai.com</div></div>
+    <div class="f-copy">© 2026 Sikhai</div>
+  </footer>
+</div>
+
+
+
+<script>
+
+var dests = {
+
+  'kawah-ijen': {
+    name:'KAWAH IJEN', loc:'Banyuwangi, Jawa Timur', rating:'4,8', stars:'★★★★★',
+    img:'Rectangle 30.jpg',                                         
+    desc:'Kawah Ijen adalah sebuah gunung berapi aktif yang terletak di perbatasan Kabupaten Banyuwangi dan Bondowoso, Jawa Timur. Kawah ini terkenal dengan fenomena blue fire — api biru elektrik yang sangat langka dan hanya ada 2 di seluruh dunia. Fenomena ini terjadi akibat pembakaran gas belerang yang keluar dari celah-celah bebatuan vulkanik.\n\nSelain blue fire, Kawah Ijen juga memiliki danau kawah berwarna toska yang menakjubkan dengan luas sekitar 1 km² dan kedalaman 200 meter. Di sekitar kawah, kamu akan menyaksikan aktivitas para penambang belerang tradisional yang sudah berlangsung turun-temurun — sebuah pemandangan yang penuh makna dan tak terlupakan.',
+    gallery:[                                                     
+      'Rectangle 44.jpg',  
+      'Rectangle 46.jpg',  
+      'Rectangle 45 - Salin.jpg',   
+      'Rectangle 43.jpg'    
+    ]
+  },
+
+  'raja-ampat': {
+    name:'RAJA AMPAT', loc:'Papua Barat, Indonesia', rating:'5,0', stars:'★★★★★',
+    img:'Rectangle 28.jpg',                                     
+    desc:'Raja Ampat adalah kepulauan yang terletak di Provinsi Papua Barat Daya dan dikenal sebagai salah satu surga bawah laut terbaik di dunia. Kawasan ini terdiri dari lebih dari 1.500 pulau kecil, gugusan karang, dan perairan yang kaya akan keanekaragaman hayati laut.\n\nSelain pemandangan pulau-pulau karst yang eksotis, Raja Ampat memiliki terumbu karang yang masih sangat terjaga dan menjadi habitat bagi ribuan spesies ikan serta biota laut lainnya. Keindahan alamnya yang luar biasa menjadikan Raja Ampat destinasi impian bagi penyelam dan pecinta alam dari seluruh dunia.',
+    gallery:[                                                    
+      'Rectangle 43 (1).jpg', 
+      'Rectangle 46 (1).jpg',  
+      'Rectangle 45 (1).jpg',  
+      'Rectangle 44 (1).jpg'  
+    ]
+  },
+
+  'gunung-bromo': {
+    name:'GUNUNG BROMO', loc:'Jawa Timur, Indonesia', rating:'4,9', stars:'★★★★★',
+    img:'Rectangle 32.jpg',                                         
+    desc:'Gunung Bromo adalah salah satu gunung berapi paling terkenal di Indonesia yang terletak di kawasan Taman Nasional Bromo Tengger Semeru, Jawa Timur. Gunung ini terkenal dengan pemandangan matahari terbit yang spektakuler serta hamparan lautan pasir yang luas dan eksotis.\n\nSelain menikmati sunrise dari berbagai titik pandang, pengunjung dapat menjelajahi lautan pasir, mengunjungi Kawah Bromo, dan melihat kehidupan masyarakat Suku Tengger yang masih menjaga tradisi serta budaya leluhur mereka. Keindahan alam dan suasana mistisnya menjadikan Gunung Bromo sebagai destinasi yang wajib dikunjungi.',
+    gallery:[                                                     
+      'Rectangle 44 (2).jpg',  
+      'Rectangle 45 (2).jpg',  
+      'Rectangle 46 (2).jpg',  
+      'Rectangle 43 (2).jpg'    
+    ]
+  },
+
+  'kelingking-beach': {
+    name:'KELINGKING BEACH', loc:'Nusa Penida, Bali', rating:'4,8', stars:'★★★★★',
+    img:'Rectangle 33.jpg',                                   
+    desc:'Kelingking Beach adalah pantai ikonik yang terletak di Pulau Nusa Penida, Bali. Pantai ini terkenal dengan tebing karangnya yang menyerupai bentuk kepala dinosaurus T-Rex, menciptakan panorama yang sangat unik dan memukau.\n\nSelain menjadi spot fotografi favorit wisatawan, Kelingking Beach menawarkan pemandangan laut biru jernih, pasir putih yang bersih, dan suasana alam yang masih alami. Dari atas tebing, pengunjung dapat menikmati salah satu pemandangan pantai paling menakjubkan di Indonesia.',
+    gallery:[                                                     
+      'Rectangle 44 (3).jpg',  
+      'Rectangle 43 (3).jpg',   
+      'Rectangle 45 (3).jpg',  
+      'Rectangle 46 (3).jpg'        
+    ]
+  },
+
+  'candi-borobudur': {
+    name:'CANDI BOROBUDUR', loc:'Jawa Tengah, Indonesia', rating:'4,7', stars:'★★★★★',
+    img:'Rectangle 38.jpg',                                    
+    desc:'Candi Borobudur adalah candi Buddha terbesar di dunia yang terletak di Kabupaten Magelang, Jawa Tengah. Dibangun pada abad ke-8 pada masa Dinasti Syailendra, candi megah ini menjadi salah satu mahakarya arsitektur dan warisan budaya Indonesia yang mendunia.\n\nSelain memiliki lebih dari 2.600 panel relief dan ratusan arca Buddha, Borobudur menawarkan pemandangan yang indah dari puncaknya, terutama saat matahari terbit. Setiap relief yang terukir di dinding candi menceritakan perjalanan kehidupan dan ajaran Buddha yang sarat makna.',
+    gallery:[                                                    
+      'Rectangle 45 (4).jpg',   
+      'Rectangle 43 (4).jpg',   
+      'Rectangle 46 (4).jpg',       
+      'Rectangle 44 (4).jpg'      
+    ]
+  },
+
+  'candi-prambanan': {
+    name:'CANDI PRAMBANAN', loc:'Yogyakarta, Indonesia', rating:'4,8', stars:'★★★★★',
+    img:'Rectangle 36.jpg',                                    
+    desc:'Candi Prambanan adalah kompleks candi Hindu terbesar di Indonesia yang terletak di perbatasan Daerah Istimewa Yogyakarta dan Jawa Tengah. Dibangun pada abad ke-9, candi ini didedikasikan untuk Trimurti, yaitu Dewa Brahma, Dewa Wisnu, dan Dewa Siwa.\n\nSelain kemegahan arsitekturnya yang menjulang hingga 47 meter, Prambanan terkenal dengan kisah legenda Roro Jonggrang yang melegenda. Pengunjung dapat menikmati keindahan relief candi, suasana bersejarah yang memukau, serta pertunjukan Sendratari Ramayana yang menjadi daya tarik budaya utama kawasan ini.',
+    gallery:[                                                   
+      'Rectangle 44 (5).jpg',
+      'Rectangle 46 (5).jpg',
+      'Rectangle 45 (5).jpg',
+      'Rectangle 46 (4).jpg'
+    ]
+  },
+
+  'pura-uluwatu': {
+    name:'PURA ULUWATU', loc:'Bali, Indonesia', rating:'4,8', stars:'★★★★★',
+    img:'Rectangle 39.jpg',                                      
+    desc:'Pura Uluwatu adalah salah satu pura paling suci dan terkenal di Bali yang terletak di atas tebing setinggi sekitar 70 meter menghadap langsung ke Samudra Hindia. Pura ini merupakan bagian dari enam pura utama yang dipercaya sebagai penjaga keseimbangan spiritual Pulau Bali.\n\nSelain memiliki nilai religius yang tinggi, Pura Uluwatu menawarkan panorama matahari terbenam yang sangat memukau. Pengunjung juga dapat menyaksikan pertunjukan Tari Kecak yang berlangsung di area terbuka dengan latar belakang laut dan sunset yang menakjubkan.',
+    gallery:[                                                    
+      'Rectangle 45 (6).jpg',
+      'Rectangle 46 (6).jpg',
+      'Rectangle 43 (6).jpg',
+      'Rectangle 44 (6).jpg'
+    ]
+  },
+
+  'ubud': {
+    name:'UBUD', loc:'Gianyar, Bali', rating:'4,9', stars:'★★★★★',
+    img:'Rectangle 37.jpg',                                         
+    desc:'Ubud adalah kawasan wisata budaya yang terletak di Kabupaten Gianyar, Bali. Daerah ini dikenal sebagai pusat seni, tradisi, dan kehidupan masyarakat Bali yang masih sangat kental dengan nilai-nilai budaya serta spiritualitas.\n\nSelain galeri seni dan pertunjukan budaya, Ubud menawarkan hamparan sawah terasering yang indah, hutan tropis yang asri, serta berbagai pura dan pusat kerajinan tradisional. Suasana yang tenang dan alami menjadikan Ubud tempat yang sempurna untuk menikmati sisi autentik Pulau Bali.',
+    gallery:[                                                   
+      'Rectangle 46 (7).jpg', 
+      'Rectangle 45 (7).jpg', 
+      'Rectangle 43 (7).jpg',
+      'Rectangle 44 (7).jpg' 
+    ]
+  }
+
+};
+
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('page-'+id).classList.add('active');
+  ['home','destinasi','paket','booking'].forEach(function(n){
+    var el=document.getElementById('nav-'+n);
+    if(el) el.classList.toggle('active', n===id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+
+function showDetail(key){
+  var d=dests[key];
+  if(!d) return;
+  document.getElementById('d-img').src=d.img;
+  document.getElementById('d-name').textContent=d.name;
+  document.getElementById('d-loc').textContent=d.loc;
+  document.getElementById('d-rating').textContent=d.rating;
+  document.getElementById('d-stars').textContent=d.stars;
+  document.getElementById('d-desc').textContent=d.desc;
+  var g=document.getElementById('d-gallery');
+  g.innerHTML=d.gallery.map(function(u){return '<img src="'+u+'" alt="">';}).join('');
+  showPage('detail');
+}
+
+function bookPaket(name){
+  var sel=document.getElementById('bk-paket');
+  for(var i=0;i<sel.options.length;i++){
+    if(sel.options[i].text===name||sel.options[i].text.startsWith(name.split('–')[0].trim())){
+      sel.value=sel.options[i].value||sel.options[i].text;
+      break;
+    }
+  }
+  showPage('booking');
+}
+
+function openWA(msg){
+  window.open('https://wa.me/6281286533826?text='+encodeURIComponent(msg),'_blank');
+}
+
+function sendBookingWA(){
+  var name=document.getElementById('bk-name').value.trim();
+  var wa=document.getElementById('bk-wa').value.trim();
+  var paket=document.getElementById('bk-paket').value;
+  var date=document.getElementById('bk-date').value;
+  var pax=document.getElementById('bk-pax').value;
+  var note=document.getElementById('bk-note').value.trim();
+  if(!name||!paket){alert('Harap isi nama dan pilih paket wisata terlebih dahulu.');return;}
+  var msg='Halo Sikhai Explore! 🌴\n\nSaya ingin memesan paket wisata:\n\n';
+  msg+='👤 Nama: '+name+'\n';
+  if(wa) msg+='📱 WhatsApp: '+wa+'\n';
+  msg+='🏝️ Paket: '+paket+'\n';
+  if(date) msg+='📅 Tanggal: '+date+'\n';
+  if(pax) msg+='👥 Peserta: '+pax+' orang\n';
+  if(note) msg+='📝 Catatan: '+note+'\n';
+  msg+='\nTerima kasih!';
+  window.open('https://wa.me/6281286533826?text='+encodeURIComponent(msg),'_blank');
+  document.getElementById('bk-success').style.display='block';
+  setTimeout(function(){
+    document.getElementById('bk-success').style.display='none';
+    ['bk-name','bk-wa','bk-paket','bk-date','bk-pax','bk-note'].forEach(function(id){document.getElementById(id).value='';});
+  },6000);
+  }
+
+  </script>
+</body>
+</html>
